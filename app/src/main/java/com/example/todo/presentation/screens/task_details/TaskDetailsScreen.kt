@@ -1,6 +1,5 @@
 package com.example.todo.presentation.screens.task_details
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -15,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -78,12 +76,7 @@ fun TaskDetailsScreen(
         }
     },
     content = {
-        val context = LocalContext.current.applicationContext
-
-        if(screenState is TaskDetailsScreenState.NotFound) {
-            navigateBack()
-            Toast.makeText(context, context.getString(R.string.not_found), Toast.LENGTH_SHORT).show()
-        }
+        if(screenState is TaskDetailsScreenState.NotFound) { navigateBack() }
 
         when(screenState) {
             is TaskDetailsScreenState.Success -> TaskProperties(

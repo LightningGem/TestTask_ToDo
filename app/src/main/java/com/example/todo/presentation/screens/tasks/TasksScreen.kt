@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
@@ -125,7 +126,8 @@ fun TasksScreen(
                                 confirmValueChange = {
                                     if(it == DismissValue.DismissedToStart) deleteTasks(setOf(task.id))
                                     true
-                                }
+                                },
+                                positionalThreshold = { 200.dp.toPx() }
                             )
 
                             SwipeToDismiss(
@@ -138,7 +140,9 @@ fun TasksScreen(
                                             .background(Color.Red)
                                     ) {
                                         Icon(
-                                            modifier = Modifier.padding(12.dp).align(Alignment.CenterEnd),
+                                            modifier = Modifier
+                                                .padding(12.dp)
+                                                .align(Alignment.CenterEnd),
                                             imageVector = Icons.Default.Delete,
                                             contentDescription = stringResource(R.string.delete),
                                             tint = MaterialTheme.colorScheme.onSurface
@@ -213,30 +217,33 @@ private fun TaskItem(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     changeIsTaskCompleted: (Boolean) -> Unit,
-) = Box(
-    modifier = modifier
-        .combinedClickable(onClick = onClick, onLongClick = onLongClick)
-        .background(color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface)
-        .padding(vertical = 8.dp)
-        .padding(start = 24.dp, end = 12.dp),
-    Alignment.Center
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+) = Surface(modifier = modifier.background(MaterialTheme.colorScheme.surface)) {
+    Box(
+        modifier = Modifier
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
+            .background(color = if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f) else MaterialTheme.colorScheme.surface)
+            .padding(vertical = 8.dp)
+            .padding(start = 24.dp, end = 12.dp),
+        Alignment.Center
     ) {
-        Text(
-            text = task.name,
-            maxLines = 1,
-            softWrap = true,
-            overflow = TextOverflow.Ellipsis,
-            style = if(task.completed) MaterialTheme.typography.bodyLarge.copy(textDecoration = TextDecoration.LineThrough) else MaterialTheme.typography.bodyLarge,
-            color = if(task.completed) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.onSurface
-        )
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                modifier = Modifier.weight(1f, fill = false),
+                text = task.name,
+                maxLines = 1,
+                softWrap = true,
+                overflow = TextOverflow.Ellipsis,
+                style = if(task.completed) MaterialTheme.typography.bodyLarge.copy(textDecoration = TextDecoration.LineThrough) else MaterialTheme.typography.bodyLarge,
+                color = if(task.completed) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.onSurface
+            )
 
-        Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(8.dp))
 
-        Checkbox(checked = task.completed, onCheckedChange = changeIsTaskCompleted)
+            Checkbox(checked = task.completed, onCheckedChange = changeIsTaskCompleted)
+        }
     }
 }

@@ -165,7 +165,7 @@ private fun TasksListDetailsScreen(
                 openTask = { selectedTaskId.value = it }
             )
 
-            else ReusableContent(key = it) {
+            else {
                 val taskDetailsScreenState = it.screenState.collectAsState()
 
                 TaskDetailsScreen(
