@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -38,7 +37,6 @@ fun TaskProperties(
 ) = Column(
     modifier = modifier
         .fillMaxSize()
-        .padding(horizontal = 12.dp)
         .padding(top = 12.dp)
 ) {
     val textFieldColors = OutlinedTextFieldDefaults.colors(
@@ -48,7 +46,7 @@ fun TaskProperties(
     )
 
     OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
         value = name,
         onValueChange = onNameChange,
         isError = invalidName,
@@ -79,7 +77,7 @@ fun TaskProperties(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 0.dp),
+            .padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Checkbox(checked = completed, onCheckedChange = onIsCompletedChange)
@@ -94,7 +92,8 @@ fun TaskProperties(
     OutlinedTextField(
         modifier = Modifier
             .weight(1f, fill = false)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(horizontal = 12.dp),
         value = description,
         onValueChange = onDescriptionChange,
         placeholder = {

@@ -27,7 +27,7 @@ class TaskDetailsViewModel @Inject constructor(
         const val ID_KEY = "task_id"
     }
 
-    private val id: Int? = savedStateHandle.get<Int>(ID_KEY)
+    val id: Int? = savedStateHandle.get<Int>(ID_KEY)
 
     private val _screenState: MutableStateFlow<TaskDetailsScreenState> = MutableStateFlow(
         if(id == null) TaskDetailsScreenState.NotFound else TaskDetailsScreenState.Loading

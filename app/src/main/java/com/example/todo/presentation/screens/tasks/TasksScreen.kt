@@ -197,7 +197,8 @@ private fun TaskItem(
             maxLines = 1,
             softWrap = true,
             overflow = TextOverflow.Ellipsis,
-            style = if(task.completed) MaterialTheme.typography.bodyLarge.copy(textDecoration = TextDecoration.LineThrough) else MaterialTheme.typography.bodyLarge
+            style = if(task.completed) MaterialTheme.typography.bodyLarge.copy(textDecoration = TextDecoration.LineThrough) else MaterialTheme.typography.bodyLarge,
+            color = if(task.completed) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.onSurface
         )
 
         Spacer(modifier = Modifier.width(8.dp))

@@ -1,8 +1,6 @@
 package com.example.todo.presentation.screens.task_details
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -13,12 +11,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -67,34 +64,28 @@ fun TaskDetailsScreen(
             }
         }
 
-        AnimatedVisibility(visible = visible.value) {
-            FloatingActionButton(
-                modifier = Modifier.padding(12.dp),
-                onClick = saveChanges,
-                shape = CircleShape
-            ) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    painter = painterResource(R.drawable.ic_save),
-                    contentDescription = stringResource(R.string.save_changes),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            }
+        if(visible.value) FloatingActionButton(
+            modifier = Modifier.padding(12.dp),
+            onClick = saveChanges,
+            shape = CircleShape
+        ) {
+            Icon(
+                modifier = Modifier.size(24.dp),
+                painter = painterResource(R.drawable.ic_save),
+                contentDescription = stringResource(R.string.save_changes),
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
+            )
         }
     },
     content = {
+        val context = LocalContext.current.applicationContext
+
+        if(screenState is TaskDetailsScreenState.NotFound) {
+            navigateBack()
+            Toast.makeText(context, context.getString(R.string.not_found), Toast.LENGTH_SHORT).show()
+        }
+
         when(screenState) {
-            is TaskDetailsScreenState.Loading -> LoadingScreen()
-            is TaskDetailsScreenState.NotFound -> Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.not_found),
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = MaterialTheme.colorScheme.outline
-                )
-            }
             is TaskDetailsScreenState.Success -> TaskProperties(
                 modifier = Modifier.padding(it),
                 name = screenState.task.name,
@@ -105,6 +96,7 @@ fun TaskDetailsScreen(
                 onDescriptionChange = changeDescription,
                 onIsCompletedChange = changeIsCompleted
             )
+            else -> LoadingScreen()
         }
     }
 )
