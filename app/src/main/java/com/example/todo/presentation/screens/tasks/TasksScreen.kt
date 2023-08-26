@@ -1,5 +1,6 @@
 package com.example.todo.presentation.screens.tasks
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -88,8 +89,8 @@ fun TasksScreen(
         when(screenState) {
             is TasksScreenState.Loading -> LoadingScreen()
 
-            is TasksScreenState.Loaded -> {
-                if(screenState.tasks.isEmpty()) Box(
+            is TasksScreenState.Loaded -> Crossfade(targetState = screenState.tasks.isEmpty()) { isEmpty ->
+                if(isEmpty) Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
@@ -221,7 +222,10 @@ private fun TaskItem(
     Box(
         modifier = Modifier
             .combinedClickable(onClick = onClick, onLongClick = onLongClick)
-            .background(color = if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f) else MaterialTheme.colorScheme.surface)
+            .background(
+                color = if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+                else MaterialTheme.colorScheme.surface
+            )
             .padding(vertical = 8.dp)
             .padding(start = 24.dp, end = 12.dp),
         Alignment.Center
