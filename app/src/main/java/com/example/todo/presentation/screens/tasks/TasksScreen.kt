@@ -138,7 +138,7 @@ fun TasksScreen(
                                     Box(
                                         modifier = Modifier
                                             .fillMaxSize()
-                                            .background(Color.Red)
+                                            .background(Color.Red.copy(alpha = 0.5f))
                                     ) {
                                         Icon(
                                             modifier = Modifier
