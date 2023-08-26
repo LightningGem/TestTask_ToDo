@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,7 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -89,26 +91,48 @@ fun TasksScreen(
                         color = MaterialTheme.colorScheme.outline
                     )
                 }
-                else LazyColumn(modifier = Modifier.padding(it).fillMaxSize()) {
-                    items(screenState.tasks, key = { it.id }) { task ->
-                        val isSelected = screenState.selectedTaskIds.contains(task.id)
+                else Column(
+                    modifier = Modifier
+                        .padding(it)
+                        .fillMaxSize()
+                ) {
 
-                        TaskItem(
-                            modifier = Modifier.animateItemPlacement(),
-                            task = task,
-                            isSelected = isSelected,
-                            onClick = if (screenState.selectedTaskIds.isNotEmpty()) {
-                                {
-                                    changeSelectedTasks(
-                                        if (isSelected) screenState.selectedTaskIds - task.id else screenState.selectedTaskIds + task.id
-                                    )
-                                }
-                            } else {
-                                { openTask(task.id) }
-                            },
-                            onLongClick = { changeSelectedTasks(screenState.selectedTaskIds + task.id) },
-                            changeIsTaskCompleted = { isCompleted -> changeIsTaskCompleted(task.id, isCompleted) }
-                        )
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 24.dp)
+                            .padding(top = 0.dp, bottom = 16.dp)
+                            .fillMaxWidth(),
+                        text = stringResource(R.string.completed_and_total, screenState.tasks.count { it.completed }, screenState.tasks.size),
+                        textAlign = TextAlign.End
+                    )
+
+                    Divider(thickness = 1.dp)
+
+                    LazyColumn(
+                        modifier = Modifier
+                            .weight(1f, fill = false)
+                            .fillMaxSize()
+                    ) {
+                        items(screenState.tasks, key = { it.id }) { task ->
+                            val isSelected = screenState.selectedTaskIds.contains(task.id)
+
+                            TaskItem(
+                                modifier = Modifier.animateItemPlacement(),
+                                task = task,
+                                isSelected = isSelected,
+                                onClick = if (screenState.selectedTaskIds.isNotEmpty()) {
+                                    {
+                                        changeSelectedTasks(
+                                            if (isSelected) screenState.selectedTaskIds - task.id else screenState.selectedTaskIds + task.id
+                                        )
+                                    }
+                                } else {
+                                    { openTask(task.id) }
+                                },
+                                onLongClick = { changeSelectedTasks(screenState.selectedTaskIds + task.id) },
+                                changeIsTaskCompleted = { isCompleted -> changeIsTaskCompleted(task.id, isCompleted) }
+                            )
+                        }
                     }
                 }
             }
