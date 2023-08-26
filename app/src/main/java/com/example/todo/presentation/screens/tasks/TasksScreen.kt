@@ -18,18 +18,25 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissValue
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -41,7 +48,7 @@ import com.example.todo.domain.entities.Task
 import com.example.todo.presentation.components.LoadingScreen
 import com.example.todo.presentation.components.TopAppBar
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TasksScreen(
     modifier: Modifier = Modifier,
@@ -114,23 +121,50 @@ fun TasksScreen(
                             .fillMaxSize()
                     ) {
                         items(screenState.tasks, key = { it.id }) { task ->
-                            val isSelected = screenState.selectedTaskIds.contains(task.id)
+                            val swipeToDismissState = rememberDismissState(
+                                confirmValueChange = {
+                                    if(it == DismissValue.DismissedToStart) deleteTasks(setOf(task.id))
+                                    true
+                                }
+                            )
 
-                            TaskItem(
+                            SwipeToDismiss(
                                 modifier = Modifier.animateItemPlacement(),
-                                task = task,
-                                isSelected = isSelected,
-                                onClick = if (screenState.selectedTaskIds.isNotEmpty()) {
-                                    {
-                                        changeSelectedTasks(
-                                            if (isSelected) screenState.selectedTaskIds - task.id else screenState.selectedTaskIds + task.id
+                                state = swipeToDismissState,
+                                background = {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .background(Color.Red)
+                                    ) {
+                                        Icon(
+                                            modifier = Modifier.padding(12.dp).align(Alignment.CenterEnd),
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = stringResource(R.string.delete),
+                                            tint = MaterialTheme.colorScheme.onSurface
                                         )
                                     }
-                                } else {
-                                    { openTask(task.id) }
                                 },
-                                onLongClick = { changeSelectedTasks(screenState.selectedTaskIds + task.id) },
-                                changeIsTaskCompleted = { isCompleted -> changeIsTaskCompleted(task.id, isCompleted) }
+                                dismissContent = {
+                                    val isSelected = screenState.selectedTaskIds.contains(task.id)
+
+                                    TaskItem(
+                                        task = task,
+                                        isSelected = isSelected,
+                                        onClick = if (screenState.selectedTaskIds.isNotEmpty()) {
+                                            {
+                                                changeSelectedTasks(
+                                                    if (isSelected) screenState.selectedTaskIds - task.id else screenState.selectedTaskIds + task.id
+                                                )
+                                            }
+                                        } else {
+                                            { openTask(task.id) }
+                                        },
+                                        onLongClick = { changeSelectedTasks(screenState.selectedTaskIds + task.id) },
+                                        changeIsTaskCompleted = { isCompleted -> changeIsTaskCompleted(task.id, isCompleted) }
+                                    )
+                                },
+                                directions = setOf(DismissDirection.EndToStart)
                             )
                         }
                     }
@@ -182,7 +216,7 @@ private fun TaskItem(
 ) = Box(
     modifier = modifier
         .combinedClickable(onClick = onClick, onLongClick = onLongClick)
-        .background(color = if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f) else MaterialTheme.colorScheme.surface)
+        .background(color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface)
         .padding(vertical = 8.dp)
         .padding(start = 24.dp, end = 12.dp),
     Alignment.Center
