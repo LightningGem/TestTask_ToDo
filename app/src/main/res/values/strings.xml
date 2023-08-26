@@ -7,4 +7,8 @@
     <string name="total_selected">%1$s selected</string>
     <string name="select_all">Select all</string>
     <string name="no_tasks">No tasks</string>
+    <string name="task_name">Task name</string>
+    <string name="task_description">Description...</string>
+    <string name="task_completed">Completed</string>
+    <string name="invalid_task_name">Invalid task name</string>
 </resources>
