@@ -12,6 +12,7 @@ buildscript {
         accompanist_adaptive_version = '0.33.1-alpha'
         nav_version = '2.7.0'
         hilt_version = '2.47'
+        resaca_version = '2.4.7'
         room_version = '2.6.0-alpha03'
     }
 }
