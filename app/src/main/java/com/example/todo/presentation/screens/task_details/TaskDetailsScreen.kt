@@ -1,4 +1,4 @@
-package com.example.todo.presentation.sceens.task_details
+package com.example.todo.presentation.screens.task_details
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box

@@ -1,4 +1,4 @@
-package com.example.todo.presentation.sceens.tasks
+package com.example.todo.presentation.screens.tasks
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background

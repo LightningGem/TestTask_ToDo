@@ -1,4 +1,4 @@
-package com.example.todo.presentation.sceens.add_task
+package com.example.todo.presentation.screens.add_task
 
 data class AddTaskScreenState(
     val name: String = "",

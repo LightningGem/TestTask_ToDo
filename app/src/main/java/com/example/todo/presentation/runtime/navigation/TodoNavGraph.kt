@@ -10,10 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.todo.presentation.sceens.add_task.AddTaskScreen
-import com.example.todo.presentation.sceens.add_task.AddTaskViewModel
-import com.example.todo.presentation.sceens.tasks.TasksScreen
-import com.example.todo.presentation.sceens.tasks.TasksViewModel
+import com.example.todo.presentation.screens.add_task.AddTaskScreen
+import com.example.todo.presentation.screens.add_task.AddTaskViewModel
+import com.example.todo.presentation.screens.tasks.TasksScreen
+import com.example.todo.presentation.screens.tasks.TasksViewModel
 import com.sebaslogen.resaca.hilt.hiltViewModelScoped
 
 @Composable
@@ -58,4 +58,10 @@ fun ToDoNavGraph(
             )
         }
     }
+}
+
+
+@Composable
+private fun TasksListDetailsScreen(windowSizeClass: WindowSizeClass) {
+    TODO()
 }
